@@ -5,10 +5,12 @@ namespace App\Http\Controllers;
 use App\Exports\ItemsExport;
 use App\Http\Requests\ProfileUpdateRequest;
 use App\Models\Items;
+use App\Models\Note;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\View\View;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -27,9 +29,45 @@ class FindController extends Controller
     }
     public function detail()
     {
-        $item = Items::findOrFail($this->request->id);
+        $item = Items::with('notes')->findOrFail($this->request->id);
         return view('form')
             ->with('item', $item);
+    }
+    public function note()
+    {
+        $item = Items::findOrFail($this->request->id);
+        return view('note')
+            ->with('item', $item);
+    }
+    public function addNote()
+    {
+        $validator = Validator::make($this->request->all(), [
+            'items_id' => 'required|integer',
+            'title' => 'required|string',
+            'creator' => 'required|string',
+            'content' => 'nullable|string',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->route("find.detail", ['id' => $this->request->items_id])->withErrors($validator->errors());
+        }
+
+        $note = new Note();
+        $note->fill($this->request->except(['_token']));
+        $note->save();
+
+        return redirect()->route("find.detail", ['id' => $this->request->items_id])
+            ->with('status', 'success')
+            ->with('message', 'Note successfully created!');
+    }
+    public function deleteNote($id, $note_id)
+    {
+        $note = Note::findOrFail($note_id);
+        $note->delete();
+
+        return redirect()->route("find.detail", ['id' => $id])
+            ->with('status', 'success')
+            ->with('message', 'Note successfully deleted!');
     }
     public function delete()
     {

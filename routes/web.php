@@ -42,6 +42,8 @@ Route::get('/storage-link', function () {
 });
 
 Route::get('/find/detail{id}', [FindController::class, 'detail'])->name('find.detail');
+Route::get('/note/{id}', [FindController::class, 'note'])->name('note');
+Route::post('/note/{id}', [FindController::class, 'addNote'])->name('note.add');
 
 // Route::get('/dashboard', function () {
 //     return view('dashboard');
@@ -60,6 +62,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/find/delete{id}', [FindController::class, 'delete'])->name('find.delete');
     Route::get('/find/print', [FindController::class, 'print'])->name('find.print');
     Route::get('/find/eksport', [FindController::class, 'eksport'])->name('find.eksport');
+    Route::get('/note/{id}/{note_id}', [FindController::class, 'deleteNote'])->name('note.delete');
 });
 
 Route::middleware('auth')->group(function () {

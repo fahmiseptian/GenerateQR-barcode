@@ -22,5 +22,9 @@ class Items extends Model
     ];
 
     protected $table = 'items';
-        
+
+    public function notes()
+    {
+        return $this->hasMany(Note::class, 'items_id', 'id');
+    }
 }
