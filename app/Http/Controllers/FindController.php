@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\ItemsExport;
 use App\Http\Requests\ProfileUpdateRequest;
 use App\Models\Items;
 use Illuminate\Http\RedirectResponse;
@@ -9,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
+use Maatwebsite\Excel\Facades\Excel;
 
 class FindController extends Controller
 {
@@ -52,5 +54,29 @@ class FindController extends Controller
         }
 
         return view('print', ['items' => $items]);
+    }
+
+
+    public function eksport()
+    {
+        $items = [];
+
+        foreach ($this->request->idArr as $id) {
+            $item = Items::findOrFail($id);
+            $items[] = [
+                'warrantyCode' => $item->warranty_code,
+                'serial_number' => $item->serial_number,
+                'customer' => $item->customer,
+                'so_number' => $item->so_number,
+                'po_number' => $item->po_number,
+                'unit' => $item->unit,
+                'delivery_date' => $item->delivery_date,
+                'installed_date' => $item->installed_date,
+                'handover_date' => $item->handover_date,
+                'expired_date' => $item->expired_date,
+            ];
+        }
+
+        return Excel::download(new ItemsExport($items), 'export-items.xlsx');
     }
 }

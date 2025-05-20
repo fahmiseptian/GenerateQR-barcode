@@ -59,6 +59,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/find', [FindController::class, 'index'])->name('find');
     Route::get('/find/delete{id}', [FindController::class, 'delete'])->name('find.delete');
     Route::get('/find/print', [FindController::class, 'print'])->name('find.print');
+    Route::get('/find/eksport', [FindController::class, 'eksport'])->name('find.eksport');
 });
 
 Route::middleware('auth')->group(function () {

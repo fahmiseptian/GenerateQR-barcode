@@ -10,8 +10,9 @@
             <div class="card shadow-sm">
                 <div class="card-body">
                     <h4 class="mb-4">Warranty List</h4>
-                    <div class="mb-3">
+                    <div class="d-flex justify-content-between m-2">
                         <button class="btn btn-success" onclick="printSelectedLabels()">Print Selected</button>
+                        <button class="btn btn-success" onclick="eksportSelectedLabels()">Eksport Selected</button>
                     </div>
                     <div class="table-responsive">
                         <table id="warrantyTable" class="table table-bordered table-striped">
@@ -72,6 +73,20 @@
 
             // Redirect to Print Page with selected IDs
             const url = `{{ route('find.print') }}?` + selected.map(id => `idArr[]=${id}`).join('&');
+            window.open(url, '_blank');
+        }
+
+        function eksportSelectedLabels() {
+            const selected = Array.from(document.querySelectorAll('.checkbox-item:checked'))
+                .map(checkbox => checkbox.value);
+
+            if (selected.length === 0) {
+                alert("Please select at least one item.");
+                return;
+            }
+
+            // Redirect to Print Page with selected IDs
+            const url = `{{ route('find.eksport') }}?` + selected.map(id => `idArr[]=${id}`).join('&');
             window.open(url, '_blank');
         }
     </script>
