@@ -9,30 +9,32 @@
         <div class="container">
             <div class="card shadow-sm">
                 <div class="card-body">
-                    <h4 class="mb-4">Warranty List</h4>
-                    <div class="d-flex justify-content-between m-2">
-                        <button class="btn btn-success" onclick="printSelectedLabels()">Print Selected</button>
-                        <button class="btn btn-success" onclick="eksportSelectedLabels()">Eksport Selected</button>
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h4 class="mb-0">Warranty List</h4>
+                        <div class="btn-group">
+                            <button class="btn btn-outline-primary" onclick="printSelectedLabels()">🖨 Cetak</button>
+                            <button class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#importModal">⬆️ Import</button>
+                            <button class="btn btn-outline-success" onclick="eksportSelectedLabels()">⬇️ Export</button>
+                        </div>
                     </div>
+
                     <div class="table-responsive">
-                        <table id="warrantyTable" class="table table-bordered table-striped">
-                            <thead class="table-dark">
+                        <table id="warrantyTable" class="table table-hover align-middle table-bordered">
+                            <thead class="table-dark text-center">
                                 <tr>
-                                    <th scope="col">
-                                        <input type="checkbox" id="select-all" onclick="toggleSelectAll(this)">
-                                    </th>
-                                    <th scope="col">Warranty Code</th>
-                                    <th scope="col">Serial Number</th>
-                                    <th scope="col">Customer</th>
-                                    <th scope="col">PO Number</th>
-                                    <th scope="col">Expired Date</th>
-                                    <th scope="col">Actions</th>
+                                    <th><input type="checkbox" id="select-all" onclick="toggleSelectAll(this)"></th>
+                                    <th>Warranty Code</th>
+                                    <th>Serial Number</th>
+                                    <th>Customer</th>
+                                    <th>PO Number</th>
+                                    <th>Expired Date</th>
+                                    <th>Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach ($items as $i)
                                 <tr>
-                                    <td>
+                                    <td class="text-center">
                                         <input type="checkbox" class="checkbox-item" value="{{ $i->id }}">
                                     </td>
                                     <td>{{ $i->warranty_code }}</td>
@@ -40,9 +42,9 @@
                                     <td>{{ $i->customer }}</td>
                                     <td>{{ $i->po_number }}</td>
                                     <td>{{ $i->expired_date }}</td>
-                                    <td>
-                                        <a href="{{ route('find.detail',['id' => $i->id]) }}" class="btn btn-primary btn-sm">Detail</a>
-                                        <a onclick="return confirm('Are you sure?')" href="{{ route('find.delete',['id' => $i->id]) }}" class="btn btn-danger btn-sm">Delete</a>
+                                    <td class="text-center">
+                                        <a href="{{ route('find.detail',['id' => $i->id]) }}" class="btn btn-sm btn-info">Detail</a>
+                                        <a href="{{ route('find.delete',['id' => $i->id]) }}" onclick="return confirm('Are you sure?')" class="btn btn-sm btn-danger">Delete</a>
                                     </td>
                                 </tr>
                                 @endforeach
@@ -54,38 +56,57 @@
         </div>
     </div>
 
+    {{-- Modal --}}
+    <div class="modal fade" id="importModal" tabindex="-1" aria-labelledby="importModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form method="post" enctype="multipart/form-data">
+                    @csrf
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="importModalLabel">Import Data</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <a href="https://docs.google.com/spreadsheets/d/1gcGYhWNr6hE7t6gh6UmLC-9NlpSS2gJ9M_e-Po8k8-g/edit?usp=sharing" target="_blank" class="btn btn-info mb-3">View Template</a>
+                        <input type="file" name="file" class="form-control" required>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Import</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    {{-- Scripts --}}
     <script>
-        // Toggle Select All
         function toggleSelectAll(source) {
             const checkboxes = document.querySelectorAll('.checkbox-item');
             checkboxes.forEach(checkbox => checkbox.checked = source.checked);
         }
 
-        // Print Selected Labels
         function printSelectedLabels() {
             const selected = Array.from(document.querySelectorAll('.checkbox-item:checked'))
-                .map(checkbox => checkbox.value);
+                .map(cb => cb.value);
 
             if (selected.length === 0) {
                 alert("Please select at least one item.");
                 return;
             }
 
-            // Redirect to Print Page with selected IDs
             const url = `{{ route('find.print') }}?` + selected.map(id => `idArr[]=${id}`).join('&');
             window.open(url, '_blank');
         }
 
         function eksportSelectedLabels() {
             const selected = Array.from(document.querySelectorAll('.checkbox-item:checked'))
-                .map(checkbox => checkbox.value);
+                .map(cb => cb.value);
 
             if (selected.length === 0) {
                 alert("Please select at least one item.");
                 return;
             }
 
-            // Redirect to Print Page with selected IDs
             const url = `{{ route('find.eksport') }}?` + selected.map(id => `idArr[]=${id}`).join('&');
             window.open(url, '_blank');
         }

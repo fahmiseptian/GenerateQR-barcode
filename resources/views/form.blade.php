@@ -183,10 +183,11 @@
                 </div>
                 <div class="mt-4 mb-4">
                     <h4>Notes</h4>
+                    @if( !empty(Auth::user()->name))
                     <div class="d-flex justify-content-between m-4">
                         <a href="{{ route('note', ['id' => $item->id]) }}" class="btn btn-primary">Add Note</a>
                     </div>
-
+                    @endif
                     <div class="mt-4 row">
                         @forelse($item->notes as $note)
                         <div class="col-md-6 mb-3">

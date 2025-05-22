@@ -20,6 +20,41 @@
 
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+
+    <!-- Select2 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <!-- jQuery (sudah kamu pakai) -->
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <!-- Select2 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+    <style>
+        .select2-container--default .select2-selection--single {
+            height: 45px;
+            font-size: 1.1rem;
+            padding: 8px 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .select2-container--default .select2-selection--single .select2-selection__rendered {
+            line-height: 45px;
+            /* text-align: center; */
+        }
+
+        .select2-container--default .select2-selection--single .select2-selection__arrow {
+            height: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .select2-container {
+            width: 100% !important;
+            /* Biar full lebar kolom */
+        }
+    </style>
 </head>
 
 <body class="font-sans antialiased">
@@ -44,8 +79,6 @@
         </main>
     </div>
 
-    <!-- jQuery (wajib untuk DataTables) -->
-    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 
     <!-- Bootstrap 5 JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>

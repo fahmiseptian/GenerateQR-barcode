@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Exports\ItemsExport;
 use App\Http\Requests\ProfileUpdateRequest;
+use App\Libraries\Ballupload;
 use App\Models\Items;
 use App\Models\Note;
 use Illuminate\Http\RedirectResponse;
@@ -29,7 +30,7 @@ class FindController extends Controller
     }
     public function detail()
     {
-        $item = Items::with('notes')->findOrFail($this->request->id);
+        $item = Items::with('notes')->where('id', $this->request->id)->orWhere('warranty_code', $this->request->id)->firstOrFail();
         return view('form')
             ->with('item', $item);
     }
@@ -116,5 +117,55 @@ class FindController extends Controller
         }
 
         return Excel::download(new ItemsExport($items), 'export-items.xlsx');
+    }
+
+    public function upload()
+    {
+        $this->request->validate([
+            'file' => 'required|mimes:xlsx,xls,csv|max:10240',
+        ]);
+
+        $file = $this->request->file('file');
+        $fileName = time() . '_' . $file->getClientOriginalName();
+        $filePath = $file->storeAs('uploads', $fileName);
+
+        // Membaca file Excel
+        $data = Excel::toArray([], $file);
+        $sheetName = $file->getClientOriginalName();
+        $sheetData = array_slice($data[0], 1);
+
+        $function = new Ballupload();
+        $result = $function->getData($sheetData);
+
+        // dd($sheetData);
+        // dd($result);
+
+        if (empty($result)) {
+            return redirect()->route('find')
+                ->with('status', 'failed')
+                ->with('message', 'No data found in the uploaded file.');
+        }
+
+
+        foreach ($result as $item) {
+            $item = Items::create([
+                'warranty_code' => $item['warranty_code'],
+                'unit_name' => $item['unit_name'],
+                'serial_number' => $item['serial_number'],
+                'customer' => $item['customer'],
+                'po_number' => $item['po_number'],
+                'so_number' => $item['so_number'],
+                'expired_date' => $item['expired_date'],
+                'delivery_date' => $item['delivery_date'],
+                'installed_date' => $item['install_date'],
+                'handover_date' => $item['handover_date'],
+            ]);
+
+            $item->save();
+        }
+
+        return redirect()->route('find')
+            ->with('status', 'success')
+            ->with('message', 'File successfully uploaded and its data saved.');
     }
 }

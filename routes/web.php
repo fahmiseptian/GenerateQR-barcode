@@ -4,6 +4,8 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\FindController;
 use App\Http\Controllers\OutboundController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\RoleController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 
@@ -58,12 +60,28 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/outbound', [OutboundController::class, 'index'])->name('outbound');
     Route::post('/outbound', [OutboundController::class, 'add'])->name('outbound.add');
 
+    Route::get('/user', [UserController::class, 'index'])->name('user');
+    Route::get('/user/create', [UserController::class, 'create'])->name('user.create');
+    Route::post('/user/create', [UserController::class, 'store'])->name('user.store');
+    Route::get('/user/edit{id}', [UserController::class, 'edit'])->name('user.edit');
+    Route::post('/user/edit{id}', [UserController::class, 'update'])->name('user.update');
+    Route::get('/user/delete{id}', [UserController::class, 'destroy'])->name('user.delete');
+    Route::post('/user/edit-password/{id}', [UserController::class, 'editPassword'])->name('user.editPassword');
+
+
     Route::get('/find', [FindController::class, 'index'])->name('find');
+    Route::post('/find', [FindController::class, 'upload'])->name('find.upload');
     Route::get('/find/delete{id}', [FindController::class, 'delete'])->name('find.delete');
     Route::get('/find/print', [FindController::class, 'print'])->name('find.print');
     Route::get('/find/eksport', [FindController::class, 'eksport'])->name('find.eksport');
     Route::get('/note/{id}/{note_id}', [FindController::class, 'deleteNote'])->name('note.delete');
+
+    Route::get('/role', [RoleController::class, 'index'])->name('role');
+    Route::post('/role', [RoleController::class, 'store'])->name('role.store');
+    Route::get('/role/delete{id}', [RoleController::class, 'destroy'])->name('role.delete');
 });
+
+
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

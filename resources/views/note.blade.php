@@ -20,7 +20,7 @@
                         </div>
                         <div class="mb-3">
                             <label for="creator" class="form-label">Creator</label>
-                            <input type="text" name="creator" id="creator" class="form-control" required>
+                            <input type="text" name="creator" id="creator" class="form-control" value="{{ session('name').' ('.session('role').')' }}" readonly required>
                         </div>
                         <div class="mb-3">
                             <label for="content" class="form-label">Note</label>
