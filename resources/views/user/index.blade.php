@@ -83,7 +83,7 @@
         passwordModal.addEventListener('show.bs.modal', function(event) {
             const button = event.relatedTarget;
             const userId = button.getAttribute('data-user-id');
-            passwordForm.setAttribute('action', `/user/edit-password/${userId}`);
+            passwordForm.setAttribute('action', `{{ route('user.editPassword', ['id' => ':userId']) }}`.replace(':userId', userId));
         });
     </script>
 </x-app-layout>

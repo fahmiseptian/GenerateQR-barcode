@@ -67,7 +67,7 @@
 
 
             $.ajax({
-                url: '/api/roles',
+                url: '{{ route('roles') }}',
                 method: 'GET',
                 success: function(data) {
                     $('#role').empty();
