@@ -82,17 +82,20 @@ class FindController extends Controller
     public function print()
     {
         $items = [];
+        $barcode = $this->request->has('barcode');
+        $qrcode = $this->request->has('qrcode');
+
         foreach ($this->request->idArr as $id) {
             $item = Items::findOrFail($id);
             $items[] = [
                 'warrantyCode' => $item->warranty_code,
                 'unitName' => $item->unit,
-                'barcode' => asset($item->barcode),
-                'qrcode' => asset($item->qr_code)
+                'barcode' => $barcode ? asset($item->barcode) : null,
+                'qrcode' => $qrcode ? asset($item->qr_code) : null,
             ];
         }
 
-        return view('print', ['items' => $items]);
+        return view('print', ['items' => $items, 'showBarcode' => $barcode, 'showQrcode' => $qrcode]);
     }
 
 

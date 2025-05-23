@@ -252,13 +252,38 @@
 
 
         function printcode() {
+            Swal.fire({
+                title: 'Pilih Jenis Cetak',
+                input: 'radio',
+                inputOptions: {
+                    qrcode: 'QR Code saja',
+                    barcode: 'Barcode saja',
+                    both: 'QR & Barcode'
+                },
+                inputValidator: (value) => {
+                    if (!value) {
+                        return 'Silakan pilih salah satu opsi!'
+                    }
+                },
+                showCancelButton: true,
+                confirmButtonText: 'Cetak',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    const id = "{{ $item->id }}";
+                    let url = `{{ route('find.print') }}?idArr[]=${id}`;
 
-            const id = "{{ $item->id }}";
+                    if (result.value === 'qrcode') {
+                        url += `&qrcode=1`;
+                    } else if (result.value === 'barcode') {
+                        url += `&barcode=1`;
+                    } else if (result.value === 'both') {
+                        url += `&barcode=1&qrcode=1`;
+                    }
 
-            const url = `{{ route('find.print') }}?idArr[]=${id}`;
-
-            window.open(url, '_blank');
-
+                    window.open(url, '_blank');
+                }
+            });
         }
     </script>
 

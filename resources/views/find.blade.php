@@ -94,8 +94,36 @@
                 return;
             }
 
-            const url = `{{ route('find.print') }}?` + selected.map(id => `idArr[]=${id}`).join('&');
-            window.open(url, '_blank');
+            Swal.fire({
+                title: 'Pilih Jenis Cetak',
+                input: 'radio',
+                inputOptions: {
+                    qrcode: 'QR Code saja',
+                    barcode: 'Barcode saja',
+                    both: 'QR & Barcode'
+                },
+                inputValidator: (value) => {
+                    if (!value) {
+                        return 'Silakan pilih salah satu opsi!'
+                    }
+                },
+                showCancelButton: true,
+                confirmButtonText: 'Cetak',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    let url = `{{ route('find.print') }}?` + selected.map(id => `idArr[]=${id}`).join('&');
+                    if (result.value === 'qrcode') {
+                        url += `&qrcode=1`;
+                    } else if (result.value === 'barcode') {
+                        url += `&barcode=1`;
+                    } else if (result.value === 'both') {
+                        url += `&barcode=1&qrcode=1`;
+                    }
+
+                    window.open(url, '_blank');
+                }
+            });
         }
 
         function eksportSelectedLabels() {
