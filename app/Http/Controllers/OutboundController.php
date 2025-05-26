@@ -35,7 +35,7 @@ class OutboundController extends Controller
             'customer' => 'required|string',
             'po_number' => 'required|string',
             'so_number' => 'required|string',
-            'expired_date' => 'required|date',
+            'expired_date' => 'required|integer|min:1|max:5',
             'delivery_date' => 'required|date',
             'installed_date' => 'required|date',
             'handover_date' => 'required|date',
@@ -45,8 +45,11 @@ class OutboundController extends Controller
             return redirect()->route("outbound")->withErrors($validator->errors());
         }
 
+        $expiredDate = now()->addYears($this->request->expired_date);
+
         $item = new Items();
-        $item->fill($this->request->except(['_token']));
+        $item->fill($this->request->except(['_token','expired_date']));
+        $item->expired_date = $expiredDate;
         $item->save();
 
         // Generate QR Code
@@ -54,7 +57,7 @@ class OutboundController extends Controller
         $qrImage = QrCode::format('png')
             ->size(200)
             ->errorCorrection('H')
-            ->generate(route('find.detail', ['id', $item->warranty_code]));
+            ->generate(route('find.detail', ['id' => $item->warranty_code]));
 
         file_put_contents($qrPath, $qrImage);
 

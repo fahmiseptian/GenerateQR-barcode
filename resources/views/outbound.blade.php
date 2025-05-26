@@ -13,28 +13,13 @@
                     @csrf
                     <div class="row mb-3">
                         <div class="col-md-6">
-                            <label for="warranty_code" class="form-label">Warranty Code</label>
-                            <input type="text" name="warranty_code" id="warranty_code" class="form-control" required>
-                        </div>
-
-                        <div class="col-md-6">
-                            <label for="unit" class="form-label">Unit</label>
-                            <input type="text" name="unit" id="unit" class="form-control" required>
-                        </div>
-
-                        <div class="col-md-6">
-                            <label for="serial_number" class="form-label">Serial Number</label>
-                            <input type="text" name="serial_number" id="serial-number" class="form-control" required>
-                        </div>
-
-                        <div class="col-md-6">
-                            <label for="expired_date" class="form-label">Expired Date</label>
-                            <input type="date" name="expired_date" id="expired-date" class="form-control" required>
-                        </div>
-
-                        <div class="col-md-6">
-                            <label for="customer" class="form-label">Customer</label>
+                            <label for="customer" class="form-label">Customer Name</label>
                             <input type="text" name="customer" id="customer" class="form-control" required>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="unit" class="form-label">Unit Name</label>
+                            <input type="text" name="unit" id="unit" class="form-control" required>
                         </div>
 
                         <div class="col-md-6">
@@ -45,6 +30,11 @@
                         <div class="col-md-6">
                             <label for="so_number" class="form-label">SO Number</label>
                             <input type="text" name="so_number" id="so-number" class="form-control" required>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="serial_number" class="form-label">Serial Number</label>
+                            <input type="text" name="serial_number" id="serial-number" class="form-control" required>
                         </div>
 
                         <div class="col-md-6">
@@ -61,13 +51,29 @@
                             <label for="handover_date" class="form-label">Handover Date</label>
                             <input type="date" name="handover_date" id="handover-date" class="form-control" required>
                         </div>
+
+                        <div class="col-md-6">
+                            <label for="warranty_code" class="form-label">Warranty Code</label>
+                            <input type="text" name="warranty_code" id="warranty_code" class="form-control" required>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="expired_date" class="form-label">Expired Warranty</label>
+                            <select name="expired_date" id="expired-date" class="form-select" required>
+                                <option value="">-- Select Duration --</option>
+                                <option value="1">1 Year</option>
+                                <option value="2">2 Year</option>
+                                <option value="3">3 Year</option>
+                                <option value="4">4 Year</option>
+                                <option value="5">5 Year</option>
+                            </select>
+                        </div>
                     </div>
 
                     <div class="text-end">
                         <button type="submit" class="btn btn-primary">Submit</button>
                     </div>
                 </form>
-
 
                 <div class="mt-4">
                     <h4>Generated Codes</h4>
@@ -103,6 +109,4 @@
             </div>
         </div>
     </div>
-
-
 </x-app-layout>
