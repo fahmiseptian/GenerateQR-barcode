@@ -73,6 +73,14 @@
                             <label for="expired_date" class="form-label">Expired Warranty</label>
                             <input type="date" name="expired_date" value="{{ $item->expired_date}}" id="expired-date" class="form-control" readonly required>
                         </div>
+                        @if (!empty($item->data) && is_array(json_decode($item->data, true)))
+                        @foreach (json_decode($item->data, true) as $label => $value)
+                        <div class="col-md-6">
+                            <label class="form-label">{{ $label }}</label>
+                            <input type="text" class="form-control" value="{{ $value }}" readonly>
+                        </div>
+                        @endforeach
+                        @endif
 
                     </div>
 

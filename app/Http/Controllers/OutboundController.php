@@ -39,6 +39,8 @@ class OutboundController extends Controller
             'delivery_date' => 'required|date',
             'installed_date' => 'required|date',
             'handover_date' => 'required|date',
+            'fields.*.label' => 'nullable|string',
+            'fields.*.value' => 'nullable|string',
         ]);
 
         if ($validator->fails()) {
@@ -47,9 +49,16 @@ class OutboundController extends Controller
 
         $expiredDate = now()->addYears($this->request->expired_date);
 
+        $result = [];
+        foreach ($this->request->fields as $field) {
+            $result[$field['label']] = $field['value'];
+        }
+
+
         $item = new Items();
-        $item->fill($this->request->except(['_token','expired_date']));
+        $item->fill($this->request->except(['_token', 'expired_date', 'fields.*.label', 'fields.*.value']));
         $item->expired_date = $expiredDate;
+        $item->data = json_encode($result);
         $item->save();
 
         // Generate QR Code

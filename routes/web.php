@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\FindController;
+use App\Http\Controllers\GroupController;
 use App\Http\Controllers\OutboundController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RoleController;
@@ -56,6 +57,15 @@ Route::post('/note/{id}', [FindController::class, 'addNote'])->name('note.add');
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+    Route::get('/group', [GroupController::class, 'index'])->name('group');
+    Route::get('/group/add', [GroupController::class, 'add'])->name('group.add');
+    Route::post('/group/add', [GroupController::class, 'store'])->name('group.store');
+    Route::get('/group/detail{id}', [GroupController::class, 'detail'])->name('group.detail');
+    Route::post('/group/detail{id}', [GroupController::class, 'edit'])->name('group.edit');
+    Route::post('/group/detail', [GroupController::class, 'storeDetail'])->name('group.detail.store');
+    Route::get('/group/detail{id}/delete{idgrupitem}', [GroupController::class, 'deleteDetail'])->name('group.detail.delete');
+    Route::get('/group/delete{id}', [GroupController::class, 'delete'])->name('group.delete');
 
     Route::get('/outbound', [OutboundController::class, 'index'])->name('outbound');
     Route::post('/outbound', [OutboundController::class, 'add'])->name('outbound.add');

@@ -16,6 +16,7 @@ class Items extends Model
         'po_number',
         'so_number',
         'expired_date',
+        'data',
         'delivery_date',
         'installed_date',
         'handover_date',
